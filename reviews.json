@@ -1,0 +1,123 @@
+[
+    {
+      "professor": "Dr. Alice Johnson",
+      "subject": "Introduction to Psychology",
+      "stars": 5,
+      "review": "Dr. Johnson is an amazing professor who makes psychology interesting and accessible. Her lectures are engaging, and she genuinely cares about her students' success."
+    },
+    {
+      "professor": "Prof. Mark Thompson",
+      "subject": "Calculus I",
+      "stars": 3,
+      "review": "Prof. Thompson is knowledgeable but his lectures can be a bit dry. Be prepared to do a lot of self-study to understand the material."
+    },
+    {
+      "professor": "Dr. Emily Davis",
+      "subject": "World History",
+      "stars": 4,
+      "review": "Dr. Davis is passionate about history and her enthusiasm is contagious. Her classes are well-structured, but the exams can be tough."
+    },
+    {
+      "professor": "Dr. John Smith",
+      "subject": "Organic Chemistry",
+      "stars": 2,
+      "review": "Dr. Smith's lectures are difficult to follow, and his grading is very strict. Make sure to attend office hours if you're struggling."
+    },
+    {
+      "professor": "Prof. Susan Martinez",
+      "subject": "Sociology 101",
+      "stars": 5,
+      "review": "Prof. Martinez is fantastic! She encourages class discussions and makes complex topics easy to understand. Highly recommend her class."
+    },
+    {
+      "professor": "Dr. Robert Lee",
+      "subject": "Macroeconomics",
+      "stars": 4,
+      "review": "Dr. Lee provides clear explanations and real-world examples. His exams are fair, but make sure to keep up with the readings."
+    },
+    {
+      "professor": "Prof. Linda Brown",
+      "subject": "English Literature",
+      "stars": 5,
+      "review": "Prof. Brown is one of the best professors I've had. Her passion for literature is evident, and she always makes time for her students."
+    },
+    {
+      "professor": "Dr. Michael Nguyen",
+      "subject": "Physics I",
+      "stars": 3,
+      "review": "Dr. Nguyen is a good lecturer, but his tests are very challenging. It's important to stay on top of the material and attend all labs."
+    },
+    {
+      "professor": "Prof. Karen Wilson",
+      "subject": "Introduction to Philosophy",
+      "stars": 4,
+      "review": "Prof. Wilson is a great philosopher and educator. Her lectures are thought-provoking, but sometimes the material can be a bit dense."
+    },
+    {
+      "professor": "Dr. Richard Hernandez",
+      "subject": "Biology 101",
+      "stars": 2,
+      "review": "Dr. Hernandez is very knowledgeable, but his lectures can be monotonous. The lab work is interesting, but the lectures need more engagement."
+    },
+    {
+      "professor": "Prof. Jessica Taylor",
+      "subject": "Creative Writing",
+      "stars": 5,
+      "review": "Prof. Taylor is inspiring and offers constructive feedback. Her class is a must for anyone interested in writing."
+    },
+    {
+      "professor": "Dr. David Green",
+      "subject": "Statistics",
+      "stars": 3,
+      "review": "Dr. Green knows his stats, but the class is very math-heavy. If you're not a fan of numbers, this class might be challenging."
+    },
+    {
+      "professor": "Prof. Rachel White",
+      "subject": "Art History",
+      "stars": 4,
+      "review": "Prof. White's lectures are engaging and she brings art history to life. However, there's a lot of memorization required."
+    },
+    {
+      "professor": "Dr. William Clark",
+      "subject": "Computer Science 101",
+      "stars": 5,
+      "review": "Dr. Clark is an excellent professor who explains programming concepts clearly. His assignments are challenging but fair."
+    },
+    {
+      "professor": "Prof. Sarah Lewis",
+      "subject": "Introduction to Anthropology",
+      "stars": 4,
+      "review": "Prof. Lewis is very knowledgeable and her classes are interesting. The exams can be tricky, so make sure to study the lecture notes."
+    },
+    {
+      "professor": "Dr. Charles Young",
+      "subject": "Chemistry 101",
+      "stars": 3,
+      "review": "Dr. Young's lectures are informative, but the material is very difficult. You need to work hard to keep up with the pace."
+    },
+    {
+      "professor": "Prof. Patricia Adams",
+      "subject": "Ethics",
+      "stars": 4,
+      "review": "Prof. Adams is thought-provoking and challenges students to think critically. Her grading is fair, but participation is key."
+    },
+    {
+      "professor": "Dr. Steven Hall",
+      "subject": "Microeconomics",
+      "stars": 2,
+      "review": "Dr. Hall's lectures are difficult to follow, and the exams are tough. Be prepared to spend extra time studying outside of class."
+    },
+    {
+      "professor": "Prof. Kimberly Robinson",
+      "subject": "Political Science",
+      "stars": 5,
+      "review": "Prof. Robinson is an outstanding professor who makes political science accessible and relevant. Her classes are highly recommended."
+    },
+    {
+      "professor": "Dr. Thomas King",
+      "subject": "Calculus II",
+      "stars": 3,
+      "review": "Dr. King is a good professor, but the material is very challenging. Make sure to attend his office hours if you're struggling."
+    }
+  ]
+  
