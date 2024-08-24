@@ -1,4 +1,5 @@
-[
+{
+  "reviews": [
     {
       "professor": "Dr. Alice Johnson",
       "subject": "Introduction to Psychology",
@@ -120,4 +121,4 @@
       "review": "Dr. King is a good professor, but the material is very challenging. Make sure to attend his office hours if you're struggling."
     }
   ]
-  
+}

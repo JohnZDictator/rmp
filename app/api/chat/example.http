@@ -1,0 +1,6 @@
+POST http://localhost:3000/api/chat HTTP/1.1
+content-type: application/json
+
+{
+    "user": "List top 5 professors who have good communication skills",
+}
