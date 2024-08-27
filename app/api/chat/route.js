@@ -1,108 +1,94 @@
-import { NextResponse } from "next/server"
-import { GoogleGenerativeAI } from "@google/generative-ai"
+import { NextResponse } from "next/server";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { Pinecone } from "@pinecone-database/pinecone";
 
 const systemPrompt = `
-You are an AI assistant for "Rate My Professor," dedicated to helping students find the best classes and professors based on their queries. For every user question, retrieve the top 3 professors that best match the user's criteria. Use the information about these professors to provide a detailed, accurate, and helpful answer to the student's query.
+You are an AI assistant for "Rate My Professor," dedicated to helping students find the best classes and professors based on their queries...
+`;
 
-For each recommended professor, include the following details when relevant:
-
-    Professor's Name: Full name.
-    Department/Subject: The department or subject they teach.
-    Rating: Overall rating (e.g., 4.5 out of 5).
-    Key Feedback: Highlight key feedback from students (e.g., teaching style, difficulty level, or engagement).
-    Course Information: Include details about the courses they teach that are relevant to the user's query.
-
-If the query requires further clarification or additional details to provide the best recommendations, ask follow-up questions. Aim to deliver concise, informative, and actionable responses that will help the student make informed decisions about their classes and professors.
-`
-
+// Initialize Google Generative AI and Pinecone instances
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const pc = new Pinecone({
-    apiKey: process.env.PINECONE_API_KEY
-})
-const index = pc.index('rag').namespace('ns1')
+const pc = new Pinecone({ apiKey: process.env.PINECONE_API_KEY });
+const index = pc.index("rag").namespace("ns1");
 
 export async function POST(req) {
-  const data = await req.text()
-  
-  // const text = data[data.length - 1].content
-  // const model = genAI.getGenerativeModel({model: 'text-embedding-004'})
-  // const embedding = (await model.embedContent(text)).embedding
+  try {
+    const rawData = await req.text();
+    const data = JSON.parse(rawData)
+    const text = data[data.length - 1].content;
 
-  // const results = await index.query({
-  //   topK : 5,
-  //   includeMetadata: true,
-  //   vector: embedding.values
-  // })
+    // Generate embedding for the query text
+    const model = genAI.getGenerativeModel({ model: "text-embedding-004" });
+    const embedding = (await model.embedContent(text)).embedding;
 
-  const lastMessage = data[data.length - 1];
-  const text = lastMessage?.content;
+    // Query Pinecone for the top 3 matches
+    const results = await index.query({
+      topK: 3,
+      includeMetadata: true,
+      vector: embedding.values,
+    });
 
-  console.log(data);
-  console.log(data.length)
+    // Construct result string from the matches
+    let resultString = "";
+    results.matches.forEach((match) => {
+      resultString += `
+      Professor: ${match.id}
+      Review: ${match.metadata.content}
+      Subject: ${match.metadata.subject}
+      Stars: ${match.metadata.stars}
+      \n\n`;
+    });
 
-  if (!text) {
-    throw new Error('No content available for embedding.');
-  }
+    const lastMessageContent = text + resultString;
+    const lastDataWithoutLastMessage = data.slice(0, data.length - 1);
 
-  const model = genAI.getGenerativeModel({model: 'text-embedding-004'});
-  const embedding = (await model.embedContent({ content: text })).embedding;
-  
+    // Initialize chat model and start the chat session
+    const chatModel = genAI.getGenerativeModel({
+      model: "gemini-1.5-flash",
+    });
 
-  const results = await index.query({
-    topK: 5,
-    includeMetadata: true,
-    vector: embedding.values
-  });
+    const chat = chatModel.startChat({
+      history: [
+        { role: "user", parts: [{ text: systemPrompt }] },
+        ...lastDataWithoutLastMessage.map((message) => ({
+          role: message.role,
+          parts: [{ text: message.content }],
+        })),
+      ],
+    });
 
+    // Send message and process the stream
+    const result = await chat.sendMessageStream(
+      lastMessageContent
+    );
 
-  let resultString = ''
-  results.matches.forEach((match) => {
-    resultString += `
-    Returned Results:
-    Professor: ${match.id}
-    Review: ${match.metadata.content}
-    Subject: ${match.metadata.subject}
-    Stars: ${match.metadata.stars}
-    \n\n`
-  })
-
-  // const lastMessage = data[data.length - 1]
-  const lastMessageContent = lastMessage.content + resultString
-  const lastDataWithoutLastMessage = data.slice(0, data.length - 1)
-
-  const chatModel = genAI.getGenerativeModel({ model: "gemini-1.5-flash" })
-  const result = await chatModel.generateContentStream({
-    history: [
-      {
-        role: "user", 
-        parts:  [{text: systemPrompt}]
-      },
-      ...lastDataWithoutLastMessage,
-      {
-        role: "user",
-        parts:[{text: lastMessageContent}]
-      }
-    ],
-  })
-
-  const stream = new ReadableStream({
-    async start(controller) {
-      const encoder = new TextEncoder()
-      try {
-        for await (const chunk of result.stream) {
-          const content = chunk.choices[0]?.delta?.content
-          if (content) {
-            const text = encoder.encode(content)
-            controller.enqueue(text)
+    // Check if the stream is iterable
+    if (result && result.stream) {
+      const stream = new ReadableStream({
+        async start(controller) {
+          const encoder = new TextEncoder();
+          try {
+            for await (const chunk of result.stream) {
+              const content = chunk?.candidates?.[0]?.content?.parts?.[0]?.text;
+              if (content) {
+                controller.enqueue(encoder.encode(content));
+              }
+            }
+          } catch (err) {
+            console.error("Stream processing error:", err);
+            controller.error(err);
+          } finally {
+            controller.close();
           }
-        }
-      } catch (err) {
-        controller.error(err)
-      } finally {
-        controller.close()
-      }
-    },
-  })
-  return new NextResponse(stream)
+        },
+      });
+
+      return new NextResponse(stream);
+    } else {
+      throw new Error("Result stream is not iterable or is undefined.");
+    }
+  } catch (err) {
+    console.error("Error processing POST request:", err);
+    return new NextResponse("Internal Server Error", { status: 500 });
+  }
 }
